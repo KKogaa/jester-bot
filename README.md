@@ -15,8 +15,16 @@ Jester is a discord bot for a personal project.
 
 ## Installation
 Create a .env file with the discord token.
+```sh
+echo "discord_token = \"DISCORD_TOKEN\"" > .env
+```
 
 Install the dependencies and start the server.
+```sh
+python3 -m venv venv
+source venv/bin/activate && pip install -r requirements.txt
+```
+
 
 ### Works on 
 Linux
