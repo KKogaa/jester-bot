@@ -1,7 +1,7 @@
 # Jester
 ## _AI Powered discord bot_
 
-<!-- ![Jester](https://raw.githubusercontent.com/KKogaa/jester-bot/main/resources/logo.jpeg "Jester") -->
+![Jester](https://raw.githubusercontent.com/KKogaa/jester-bot/main/resources/logo.jpeg "Jester")
 
 Jester is a discord bot for a personal project.
 
