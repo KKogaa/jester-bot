@@ -4,17 +4,17 @@ from disnake.ext import commands
 from datetime import timedelta
 import urllib
 from urllib.parse import urlparse
-from bs4 import BeautifulSoup
-from requests_html import AsyncHTMLSession
+# from bs4 import BeautifulSoup
+# from requests_html import AsyncHTMLSession
 
-import google_auth_oauthlib.flow
-import googleapiclient.discovery
-import googleapiclient.errors
+# import google_auth_oauthlib.flow
+# import googleapiclient.discovery
+# import googleapiclient.errors
 
-from apiclient.discovery import build
-from oauth2client import client  # Added
-from oauth2client import tools  # Added
-from oauth2client.file import Storage  # Added
+# from apiclient.discovery import build
+# from oauth2client import client  # Added
+# from oauth2client import tools  # Added
+# from oauth2client.file import Storage  # Added
 
 import youtube_dl
 import asyncio
@@ -82,10 +82,8 @@ class Youtube(commands.Cog):
         videos_search = VideosSearch(keyword, limit=20)
         videos_result = videos_search.result()
 
-        print("!!!!!!!!!!!!!!!!11")
         for video in videos_result["result"]:
             print(video["title"])
-        print("!!!!!!!!!!!!!!!!11")
 
         return videos_result["result"][0]["link"]
 
