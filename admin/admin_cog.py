@@ -23,4 +23,4 @@ class Admin(commands.Cog):
             await ctx.send(f"Hello {member.name}... This feels familiar.")
         self._last_member = member
 
-    #TODO: KICK, BAN, TIMEOUT
+    # TODO: KICK, BAN, TIMEOUT

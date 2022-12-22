@@ -9,6 +9,7 @@ load_dotenv()
 
 DISCORD_TOKEN = os.getenv("discord_token")
 
+
 class BotBase(commands.Bot):
     def __init__(self):
         super().__init__(
@@ -25,5 +26,6 @@ if __name__ == "__main__":
     @bot.event
     async def on_ready():
         print("The bot is ready!")
+
 
 bot.run(DISCORD_TOKEN)
