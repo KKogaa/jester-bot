@@ -4,23 +4,12 @@ from disnake.ext import commands
 from datetime import timedelta
 import urllib
 from urllib.parse import urlparse
-# from bs4 import BeautifulSoup
-# from requests_html import AsyncHTMLSession
-
-# import google_auth_oauthlib.flow
-# import googleapiclient.discovery
-# import googleapiclient.errors
-
-# from apiclient.discovery import build
-# from oauth2client import client  # Added
-# from oauth2client import tools  # Added
-# from oauth2client.file import Storage  # Added
 
 import youtube_dl
 import asyncio
 from asyncio import coroutine, run
 
-from youtubesearchpython import VideosSearch
+from youtube_search import YoutubeSearch
 
 ###############################################
 # YOUTUBE DL AND FFMPEG
@@ -48,14 +37,6 @@ ffmpeg_options = {"options": "-vn"}
 
 ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
 
-###############################################
-# GOOGLE STUFF
-###############################################
-scopes = ["https://www.googleapis.com/auth/youtube.force-ssl"]
-
-
-###############################################
-
 
 class Youtube(commands.Cog):
     def __init__(self, bot):
@@ -79,13 +60,9 @@ class Youtube(commands.Cog):
         return parsed_url.netloc == "www.youtube.com" and parsed_url.path == "/watch"
 
     async def _search_url(self, keyword: str) -> str:
-        videos_search = VideosSearch(keyword, limit=20)
-        videos_result = videos_search.result()
+        results = YoutubeSearch(keyword, max_results=10).to_dict()
 
-        for video in videos_result["result"]:
-            print(video["title"])
-
-        return videos_result["result"][0]["link"]
+        return "https://www.youtube.com/" + results[0]["url_suffix"]
 
     @commands.command(name="join")
     async def join(self, ctx):
