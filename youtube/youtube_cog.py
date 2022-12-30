@@ -1,15 +1,15 @@
 import os
+import re
 import disnake
 from disnake.ext import commands
 from datetime import timedelta
-import urllib
 from urllib.parse import urlparse
 
 import youtube_dl
 import asyncio
 from asyncio import coroutine, run
 
-from youtube_search import YoutubeSearch
+from youtubesearchpython import VideosSearch
 
 ###############################################
 # YOUTUBE DL AND FFMPEG
@@ -60,9 +60,8 @@ class Youtube(commands.Cog):
         return parsed_url.netloc == "www.youtube.com" and parsed_url.path == "/watch"
 
     async def _search_url(self, keyword: str) -> str:
-        results = YoutubeSearch(keyword, max_results=10).to_dict()
-
-        return "https://www.youtube.com/" + results[0]["url_suffix"]
+        videos_search = VideosSearch(keyword, limit=5, region="US")
+        return videos_search.result()["result"][0]["link"]
 
     @commands.command(name="join")
     async def join(self, ctx):
@@ -78,7 +77,7 @@ class Youtube(commands.Cog):
         return source, title, meta
 
     @commands.command(name="play", help="Plays a song")
-    async def play(self, ctx, url: str):
+    async def play(self, ctx, *, url: str):
 
         try:
             await self.join(ctx)
@@ -113,9 +112,9 @@ class Youtube(commands.Cog):
             await ctx.send(f"**Added to queue: ** {title}")
 
     async def play_next_in_queue(self, ctx, id):
+        voice = ctx.guild.voice_client
+        voice.stop()
         if self.queues[id] != []:
-            voice = ctx.guild.voice_client
-            voice.stop()
             while voice.is_playing():
                 await asyncio.sleep(1)
             url, _, _ = self.queues[id].pop(0)

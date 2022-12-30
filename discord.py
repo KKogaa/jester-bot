@@ -20,7 +20,6 @@ class BotBase(commands.Bot):
 
         super().__init__(
             command_prefix=commands.when_mentioned_or("!"),
-            # command_prefix=commands.when_mentioned_or("/"),
             intents=disnake.Intents.all(),
             command_sync_flags=command_sync_flags,
         )
