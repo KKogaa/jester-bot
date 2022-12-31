@@ -1,5 +1,3 @@
-import os
-import re
 import disnake
 from disnake.ext import commands
 from datetime import timedelta
@@ -7,7 +5,6 @@ from urllib.parse import urlparse
 
 import youtube_dl
 import asyncio
-from asyncio import coroutine, run
 
 from youtubesearchpython import VideosSearch
 
