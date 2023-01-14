@@ -13,14 +13,5 @@ class Admin(commands.Cog):
         if channel is not None:
             await channel.send(f"Welcome {member.mention}.")
 
-    @commands.command()
-    async def hello(self, ctx, *, member: disnake.Member = None):
-        """Says hello"""
-        member = member or ctx.author
-        if self._last_member is None or self._last_member.id != member.id:
-            await ctx.send(f"Hello {member.name}~")
-        else:
-            await ctx.send(f"Hello {member.name}... This feels familiar.")
-        self._last_member = member
-
+    # TODO: TOXIC MODERATION
     # TODO: KICK, BAN, TIMEOUT

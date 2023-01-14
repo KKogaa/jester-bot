@@ -3,11 +3,9 @@ import os
 from dotenv import load_dotenv
 import disnake
 from disnake.ext import commands
-from admin import Admin
-from youtube import Youtube
+from discord_commands import Admin, Youtube
 
 load_dotenv()
-
 DISCORD_TOKEN = os.getenv("discord_token")
 
 

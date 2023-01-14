@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional, Any
+from typing import Optional, Any, Tuple
 
 
 class Song:
@@ -19,15 +19,20 @@ class MusicPlayer(ABC):
     async def get_song_from_url(self, url: str):
         raise NotImplementedError
 
-    async def add_to_queue(self, guild_id: int, url: str) -> Optional[Song]:
+    async def add_to_queue(
+        self, guild_id: int, url: str
+    ) -> Tuple[Optional[Song], Optional[str]]:
+        try:
+            song: Song = await self.get_song_from_url(url=url)
+        except Exception as e:
+            return None, str(e)
 
-        song: Song = await self.get_song_from_url(url=url)
         if guild_id not in self.queues:
             self.queues[guild_id] = [song]
         else:
             self.queues[guild_id].append(song)
 
-        return song
+        return song, None
 
     def pop_from_queue(self, guild_id: int) -> Optional[Song]:
         if guild_id not in self.queues:
@@ -44,11 +49,17 @@ class MusicPlayer(ABC):
             return 0
 
         num_elements = len(self.queues[guild_id])
-        self.queues[guild_id] = []
+        del self.queues[guild_id]
+        del self.current[guild_id]
         return num_elements
 
     def print_queue(self, guild_id: int) -> str:
-        if guild_id in self.current and guild_id in self.queues:
+        if (
+            guild_id in self.current
+            and guild_id in self.queues
+            and self.current[guild_id] is not None
+            and not self.queues[guild_id]
+        ):
             head_song = self.current[guild_id]
             head_title = head_song.title
 
