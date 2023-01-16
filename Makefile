@@ -6,4 +6,4 @@ deploy:
 downscale:
 	heroku ps:scale --app=jester-bot-2 jester-bot=0 
 upscale:
-	heroku ps:scale --app=jester-bot-2 jester-bot=0 
+	heroku ps:scale --app=jester-bot-2 jester-bot=1 
