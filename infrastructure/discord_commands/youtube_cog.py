@@ -12,25 +12,44 @@ class Youtube(commands.Cog):
         self.bot = bot
         self.player = YoutubePlayer()
 
-    @commands.slash_command(name="go", description="Plays a song")
-    async def play_song(self, inter: disnake.ApplicationCommandInteraction, url: str):
-        # Defer the response
-        await inter.response.defer(with_message=True)
-
+    @commands.slash_command(
+        name="connect", description="Joins the call", auto_sync=True
+    )
+    async def connect_to_call(
+        self, inter: disnake.ApplicationCommandInteraction
+    ):
         if not inter.author.voice:
-            await inter.send("Not connected to the voice channel")
+            await inter.send("Nobody is conected to the voice channel")
             return
 
-        channel = inter.author.voice.channel
+        channel: disnake.VoiceChannel = inter.author.voice.channel
         voice_client: disnake.VoiceClient = inter.guild.voice_client
 
         if not voice_client:
-            await channel.connect()
-            voice_client: disnake.VoiceClient = inter.guild.voice_client
+            await asyncio.gather(
+                inter.send("Connecting to the voice channel"), channel.connect()
+            )
+            return
 
-        song, error = await self.player.add_to_queue(guild_id=inter.guild_id, url=url)
+        await inter.send("Already connected to the voice channel")
 
-        if error is not None:
+    @commands.slash_command(name="play", description="Plays a song")
+    async def play_song(
+        self, inter: disnake.ApplicationCommandInteraction, url: str
+    ):
+        await inter.response.defer(with_message=True)
+
+        voice_client: disnake.VoiceClient = inter.bot.voice_clients.pop()
+
+        if not voice_client:
+            await inter.followup.send("Couldn't detect the voice client")
+            return
+
+        song, error = await self.player.add_to_queue(
+            guild_id=inter.guild_id, url=url
+        )
+
+        if error:
             await inter.followup.send(error)
             return
 

@@ -25,7 +25,7 @@ class MusicPlayer(ABC):
         try:
             song: Song = await self.get_song_from_url(url=url)
         except Exception as e:
-            return None, str(e)
+            raise 
 
         if guild_id not in self.queues:
             self.queues[guild_id] = [song]

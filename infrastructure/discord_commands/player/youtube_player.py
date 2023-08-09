@@ -2,11 +2,18 @@ from .player import MusicPlayer, Song
 
 import disnake
 import asyncio
-import youtube_dl
+
+# BROKEN library
+import yt_dlp
+
+# import youtube_dl
+# import yt_dlp
+
+# from yt-dlp import YoutubeDL
 from urllib.parse import urlparse
 from youtubesearchpython import VideosSearch
 
-youtube_dl.utils.bug_reports_message = lambda: ""
+yt_dlp.utils.bug_reports_message = lambda: ""
 
 SAVE_PATH = "./youtube/music_files/youtube/"
 
@@ -26,7 +33,7 @@ ytdl_format_options = {
 
 ffmpeg_options = {"options": "-vn"}
 
-ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
+ytdl = yt_dlp.YoutubeDL(ytdl_format_options)
 
 
 class YoutubePlayer(MusicPlayer):
@@ -43,14 +50,19 @@ class YoutubePlayer(MusicPlayer):
 
     def _is_youtube_url(self, url: str) -> bool:
         parsed_url = urlparse(url)
-        return parsed_url.netloc == "www.youtube.com" and parsed_url.path == "/watch"
+        return (
+            parsed_url.netloc == "www.youtube.com"
+            and parsed_url.path == "/watch"
+        )
 
     async def _search_url(self, keyword: str) -> str:
         videos_search = VideosSearch(keyword, limit=5, region="US")
         return videos_search.result()["result"][0]["link"]
 
     async def obtain_audio_source(self, url):
-        filename, title, meta = await self.get_youtube_video(url=url, stream=True)
+        filename, title, meta = await self.get_youtube_video(
+            url=url, stream=True
+        )
         source = disnake.FFmpegPCMAudio(source=filename)
         return source, title, meta
 
@@ -59,7 +71,9 @@ class YoutubePlayer(MusicPlayer):
         if self._is_youtube_url(url=url):
             url = await self._search_url(keyword=url)
 
-        filename, title, meta = await self.get_youtube_video(url=url, stream=True)
+        filename, title, meta = await self.get_youtube_video(
+            url=url, stream=True
+        )
         source = disnake.FFmpegPCMAudio(source=filename)
 
         return Song(
